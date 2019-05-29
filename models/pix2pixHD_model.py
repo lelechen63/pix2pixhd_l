@@ -25,13 +25,13 @@ class Pix2PixHDModel(BaseModel):
         self.isTrain = opt.train
         self.use_features = opt.instance_feat or opt.label_feat
         self.gen_features = self.use_features and not self.opt.load_features
-        input_nc = opt.label_nc if opt.label_nc != 0 else opt.input_nc
+        input_nc = 2 * opt.label_nc + 3 
 
         ##### define networks        
         # Generator network
         netG_input_nc = input_nc        
         if not opt.no_instance:
-            netG_input_nc += 1
+            netG_input_nc += 2
         if self.use_features:
             netG_input_nc += opt.feat_num                  
         self.netG = networks.define_G(netG_input_nc, opt.output_nc, opt.ngf, opt.netG, 
@@ -43,7 +43,7 @@ class Pix2PixHDModel(BaseModel):
             use_sigmoid = opt.no_lsgan
             netD_input_nc = input_nc + opt.output_nc
             if not opt.no_instance:
-                netD_input_nc += 1
+                netD_input_nc += 2
             self.netD = networks.define_D(netD_input_nc, opt.ndf, opt.n_layers_D, opt.norm, use_sigmoid, 
                                           opt.num_D, not opt.no_ganFeat_loss, gpu_ids=self.gpu_ids)
 
@@ -110,7 +110,7 @@ class Pix2PixHDModel(BaseModel):
             params = list(self.netD.parameters())    
             self.optimizer_D = torch.optim.Adam(params, lr=opt.lr, betas=(opt.beta1, 0.999))
 
-    def encode_input(self, input_parsing, input_image, gt_parsing, gt_image, label_map, inst_map=None, real_image=None, feat_map=None, infer=False):             
+    def encode_input(self, input_parsing, input_image, gt_parsing, gt_image,infer=False):             
         if self.opt.label_nc == 0:
             input_label = input_parsing.data.cuda()
             gt_label = gt_parsing.data.cuda()
@@ -126,28 +126,31 @@ class Pix2PixHDModel(BaseModel):
             if self.opt.data_type == 16:
                 gt_label = gt_label.half()
 
+        # real images for training
+        if input_image is not None:
+            input_image = Variable(input_image.data.cuda())
         # # get edges from instance map
-        # if not self.opt.no_instance:
-        #     inst_map = inst_map.data.cuda()
-        #     edge_map = self.get_edges(inst_map)
-        #     input_label = torch.cat((input_label, edge_map), dim=1)
-
-
+        if not self.opt.no_instance:
+            in_edge_map = self.get_edges(input_parsing.data.cuda())
+            gt_edge_map = self.get_edges(gt_parsing.data.cuda())
+            input_labels = torch.cat(( input_image, input_label, gt_label,  in_edge_map ,gt_edge_map), dim=1)
+        else:
+            input_labels =  torch.cat(( input_image, input_label, gt_label), dim=1)
         gt_label = Variable(gt_label, volatile = infer)
         input_label = Variable(input_label, volatile=infer)
+
+        input_labels = Variable(input_labels, volatile=infer)
 
         # real images for training
         if gt_image is not None:
             gt_image = Variable(gt_image.data.cuda())
 
 
-        # real images for training
-        if input_image is not None:
-            input_image = Variable(input_image.data.cuda())
+        
 
         
 
-        return input_label, input_image, gt_label, gt_image, inst_map
+        return input_labels, input_label,  input_image, gt_parsing,  gt_image
 
     def discriminate(self, input_label, test_image, use_pool=False):
         input_concat = torch.cat((input_label, test_image.detach()), dim=1)
@@ -159,27 +162,20 @@ class Pix2PixHDModel(BaseModel):
 
     def forward(self, input_parsing, input_image, gt_parsing, gt_image, infer=False):
         # Encode Inputs
-        input_parsing,  input_image, gt_parsing, real_image = self.encode_input(input_parsing, input_image, gt_parsing, gt_image)  
-
+        input_concat, input_parsing,  input_image, gt_parsing, real_image = self.encode_input(input_parsing, input_image, gt_parsing, gt_image)  
         # Fake Generation
-        if self.use_features:
-            if not self.opt.load_features:
-                feat_map = self.netE.forward(real_image, inst_map)                     
-            input_concat = torch.cat((input_label, feat_map), dim=1)                        
-        else:
-            input_concat = input_label
         fake_image = self.netG.forward(input_concat)
 
         # Fake Detection and Loss
-        pred_fake_pool = self.discriminate(input_label, fake_image, use_pool=True)
+        pred_fake_pool = self.discriminate(input_concat, fake_image, use_pool=True)
         loss_D_fake = self.criterionGAN(pred_fake_pool, False)        
 
         # Real Detection and Loss        
-        pred_real = self.discriminate(input_label, real_image)
+        pred_real = self.discriminate(input_concat, real_image)
         loss_D_real = self.criterionGAN(pred_real, True)
 
         # GAN loss (Fake Passability Loss)        
-        pred_fake = self.netD.forward(torch.cat((input_label, fake_image), dim=1))        
+        pred_fake = self.netD.forward(torch.cat((input_concat, fake_image), dim=1))        
         loss_G_GAN = self.criterionGAN(pred_fake, True)               
         
         # GAN feature matching loss

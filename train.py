@@ -108,9 +108,11 @@ for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
         ### display output images
         if save_fake:
             visuals = OrderedDict([('input_image', util.tensor2im(data['input_image'][0])),
-                                   ('input_label', util.tensor2label(data['gt_parsing'][0], opt.label_nc)),
-                                   ('synthesized_image', util.tensor2im(generated.data[0])),
-                                   ('real_image', util.tensor2im(data['gt_image'][0]))])
+                                    ('input_parsing', util.tensor2im(data['input_parsing'][0],  opt.label_nc)),
+                                    ('gt_label', util.tensor2label(data['gt_parsing'][0], opt.label_nc)),
+                                    ('synthesized_image', util.tensor2im(generated.data[0])),
+                                    ('real_image', util.tensor2im(data['gt_image'][0]))])
+            # print (data['gt_path'][0])
             visualizer.display_current_results(visuals, epoch, total_steps)
 
         ### save latest model
@@ -124,8 +126,9 @@ for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
        
     # end of epoch 
     iter_end_time = time.time()
-    print('End of epoch %d / %d \t Time Taken: %d sec' %
+    print('End of epoch %d / %d \t Time Taken: %d sec ' %
           (epoch, opt.niter + opt.niter_decay, time.time() - epoch_start_time))
+    
 
     ### save model for this epoch
     if epoch % opt.save_epoch_freq == 0:

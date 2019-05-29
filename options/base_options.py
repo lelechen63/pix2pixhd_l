@@ -36,10 +36,10 @@ class BaseOptions():
         self.parser.add_argument('--resize_or_crop', type=str, default='none', help='scaling and cropping of images at load time [resize_and_crop|crop|scale_width|scale_width_and_crop]')
         self.parser.add_argument('--serial_batches', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')        
         self.parser.add_argument('--no_flip', action='store_true', help='if specified, do not flip the images for data argumentation') 
-        self.parser.add_argument('--nThreads', default=2, type=int, help='# threads for loading data')                
+        self.parser.add_argument('--nThreads', default=20, type=int, help='# threads for loading data')                
         self.parser.add_argument('--max_dataset_size', type=int, default=float("inf"), help='Maximum number of samples allowed per dataset. If the dataset directory contains more than max_dataset_size, only a subset is loaded.')
 
-        # for displays
+        # for displays9
 
         self.parser.add_argument('--display_winsize', type=int, default=512,  help='display window size')
         self.parser.add_argument('--tf_log', action='store_true', help='if specified, use tensorboard logging. Requires tensorflow installed')
@@ -69,7 +69,7 @@ class BaseOptions():
         if not self.initialized:
             self.initialize()
         self.opt = self.parser.parse_args()
-        self.opt.isTrain = self.isTrain   # train or test
+        self.opt.train = 'train'   # train or test
 
         str_ids = self.opt.gpu_ids.split(',')
         self.opt.gpu_ids = []
