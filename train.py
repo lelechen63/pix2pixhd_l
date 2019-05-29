@@ -71,14 +71,18 @@ for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
         losses, generated = model(Variable(data['input_parsing']), Variable(data['input_image']), 
             Variable(data['gt_parsing']), Variable(data['gt_image']), infer=save_fake)
 
+        
         # sum per device losses
         losses = [ torch.mean(x) if not isinstance(x, int) else x for x in losses ]
+
+        print (losses)
+        print ('jjjjjjjj')
         loss_dict = dict(zip(model.module.loss_names, losses))
         print (loss_dict)
         print ('hhhhhhhhhhhh')
         # calculate final loss scalar
         loss_D = (loss_dict['D_fake'] + loss_dict['D_real']) * 0.5
-        loss_G = loss_dict['G_GAN'] + loss_dict.get('G_GAN_Feat',0) + loss_dict.get('G_VGG',0)
+        loss_G = loss_dict['G_GAN'] + loss_dict.get('G_GAN_Feat',0) + loss_dict.get('G_VGG',0) + loss_dict['G_L1']
 
         ############### Backward Pass ####################
         # update generator weights
