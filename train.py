@@ -107,7 +107,7 @@ for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
         ### display output images
         if save_fake:
             visuals = OrderedDict([('input_image', util.tensor2im(data['input_image'][0])),
-                                    ('input_parsing', util.tensor2im(data['input_parsing'][0],  opt.label_nc)),
+                                    ('input_parsing', util.tensor2label(data['input_parsing'][0],  opt.label_nc)),
                                     ('gt_label', util.tensor2label(data['gt_parsing'][0], opt.label_nc)),
                                     ('synthesized_image', util.tensor2im(generated.data[0])),
                                     ('real_image', util.tensor2im(data['gt_image'][0]))])
