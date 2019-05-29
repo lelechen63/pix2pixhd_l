@@ -14,8 +14,8 @@ class Pix2PixHDModel(BaseModel):
     
     def init_loss_filter(self, use_gan_feat_loss, use_vgg_loss):
         flags = (True, use_gan_feat_loss, use_vgg_loss, True, True)
-        def loss_filter(g_gan, g_gan_feat, g_vgg, d_real, d_fake):
-            return [l for (l,f) in zip((g_gan,g_gan_feat,g_vgg,d_real,d_fake),flags) if f]
+        def loss_filter(g_gan, g_l1, g_gan_feat, g_vgg, d_real, d_fake):
+            return [l for (l,f) in zip((g_gan,g_l1, g_gan_feat,g_vgg,d_real,d_fake),flags) if f]
         return loss_filter
     
     def initialize(self, opt):
@@ -75,12 +75,13 @@ class Pix2PixHDModel(BaseModel):
             
             self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor)   
             self.criterionFeat = torch.nn.L1Loss()
+            self.criterionPix= torch.nn.L1Loss()
             if not opt.no_vgg_loss:             
                 self.criterionVGG = networks.VGGLoss(self.gpu_ids)
                 
         
             # Names so we can breakout loss
-            self.loss_names = self.loss_filter('G_GAN','G_GAN_Feat','G_VGG','D_real', 'D_fake')
+            self.loss_names = self.loss_filter('G_GAN', 'G_L1','G_GAN_Feat','G_VGG', 'D_real', 'D_fake')
 
             # initialize optimizers
             # optimizer G
@@ -176,7 +177,11 @@ class Pix2PixHDModel(BaseModel):
 
         # GAN loss (Fake Passability Loss)        
         pred_fake = self.netD.forward(torch.cat((input_concat, fake_image), dim=1))        
-        loss_G_GAN = self.criterionGAN(pred_fake, True)               
+        loss_G_GAN = self.criterionGAN(pred_fake, True)   
+
+        # pixel loss 
+
+        loss_G_l1 = self.criterionPix(fake_image, real_image) * 100.0            
         
         # GAN feature matching loss
         loss_G_GAN_Feat = 0
@@ -194,7 +199,7 @@ class Pix2PixHDModel(BaseModel):
             loss_G_VGG = self.criterionVGG(fake_image, real_image) * self.opt.lambda_feat
         
         # Only return the fake_B image if necessary to save BW
-        return [ self.loss_filter( loss_G_GAN, loss_G_GAN_Feat, loss_G_VGG, loss_D_real, loss_D_fake ), None if not infer else fake_image ]
+        return [ self.loss_filter( loss_G_GAN,loss_G_l1, loss_G_GAN_Feat, loss_G_VGG, loss_D_real, loss_D_fake ), None if not infer else fake_image ]
 
     def inference(self, label, inst, image=None):
         # Encode Inputs        
