@@ -13,9 +13,10 @@ class Pix2PixHDModel(BaseModel):
         return 'Pix2PixHDModel'
     
     def init_loss_filter(self, use_gan_feat_loss, use_vgg_loss):
-        flags = (True, use_gan_feat_loss, use_vgg_loss, True, True)
+        flags = (True,True, use_gan_feat_loss, use_vgg_loss, True, True)
         def loss_filter(g_gan, g_l1, g_gan_feat, g_vgg, d_real, d_fake):
             return [l for (l,f) in zip((g_gan,g_l1, g_gan_feat,g_vgg,d_real,d_fake),flags) if f]
+
         return loss_filter
     
     def initialize(self, opt):
@@ -82,8 +83,6 @@ class Pix2PixHDModel(BaseModel):
         
             # Names so we can breakout loss
             self.loss_names = self.loss_filter('G_GAN', 'G_L1','G_GAN_Feat','G_VGG', 'D_real', 'D_fake')
-            print (self.loss_names)
-            print ('uuuuuuuuuuuuu')
             # initialize optimizers
             # optimizer G
             if opt.niter_fix_global > 0:                
