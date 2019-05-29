@@ -82,7 +82,8 @@ class Pix2PixHDModel(BaseModel):
         
             # Names so we can breakout loss
             self.loss_names = self.loss_filter('G_GAN', 'G_L1','G_GAN_Feat','G_VGG', 'D_real', 'D_fake')
-
+            print (self.loss_names)
+            print ('uuuuuuuuuuuuu')
             # initialize optimizers
             # optimizer G
             if opt.niter_fix_global > 0:                
