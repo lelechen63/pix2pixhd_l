@@ -199,6 +199,8 @@ class Pix2PixHDModel(BaseModel):
             loss_G_VGG = self.criterionVGG(fake_image, real_image) * self.opt.lambda_feat
         
         # Only return the fake_B image if necessary to save BW
+        print (self.loss_filter( loss_G_GAN,loss_G_l1, loss_G_GAN_Feat, loss_G_VGG, loss_D_real, loss_D_fake ))
+        print ('++++++')
         return [ self.loss_filter( loss_G_GAN,loss_G_l1, loss_G_GAN_Feat, loss_G_VGG, loss_D_real, loss_D_fake ), None if not infer else fake_image ]
 
     def inference(self, label, inst, image=None):
