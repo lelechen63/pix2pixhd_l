@@ -46,7 +46,7 @@ class DenseposeDataset(BaseDataset):
         if self.train == 'train':
             self.input_image = os.path.join(self.root, 'MEN','Tees_Tanks',  self.train_data[index][0].replace('.jpg','_512.jpg')) 
         else:
-            self.input_image = os.path.join(self.root, 'MEN','Tees_Tanks',  self.teist_data[index][0].replace('.jpg','_512.jpg')) 
+            self.input_image = os.path.join(self.root, 'MEN','Tees_Tanks',  self.test_data[index][0].replace('.jpg','_512.jpg')) 
 
         
 

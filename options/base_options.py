@@ -63,14 +63,14 @@ class BaseOptions():
         self.parser.add_argument('--nef', type=int, default=16, help='# of encoder filters in the first conv layer')        
         self.parser.add_argument('--n_clusters', type=int, default=10, help='number of clusters for features')        
 
+        self.parser.add_argument('--train', type=str, default='train', help='selects model to use for netG')
+
         self.initialized = True
 
     def parse(self, save=True):
         if not self.initialized:
             self.initialize()
         self.opt = self.parser.parse_args()
-        self.opt.train = 'train'   # train or test
-
         str_ids = self.opt.gpu_ids.split(',')
         self.opt.gpu_ids = []
         for str_id in str_ids:
@@ -91,7 +91,8 @@ class BaseOptions():
 
         # save to the disk        
         expr_dir = os.path.join(self.opt.checkpoints_dir, self.opt.name)
-        util.mkdirs(expr_dir)
+        if not os.path.join(expr_dir):
+            util.mkdirs(expr_dir)
         if save and not self.opt.continue_train:
             file_name = os.path.join(expr_dir, 'opt.txt')
             with open(file_name, 'wt') as opt_file:

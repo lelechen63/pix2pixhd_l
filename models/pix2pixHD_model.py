@@ -24,6 +24,8 @@ class Pix2PixHDModel(BaseModel):
         if opt.resize_or_crop != 'none' or not opt.train: # when training at full res this causes OOM
             torch.backends.cudnn.benchmark = True
         self.isTrain = opt.train
+        print (self.isTrain)
+        print ('yyyyy')
         self.use_features = opt.instance_feat or opt.label_feat
         self.gen_features = self.use_features and not self.opt.load_features
         input_nc = 2 * opt.label_nc + 3 
@@ -57,7 +59,8 @@ class Pix2PixHDModel(BaseModel):
 
         # load networks
         if not self.isTrain == 'train' or opt.continue_train or opt.load_pretrain:
-            pretrained_path = '' if not self.isTrain else opt.load_pretrain
+            pretrained_path = '' if not self.isTrain == 'train' else opt.load_pretrain
+            print (pretrained_path)
             self.load_network(self.netG, 'G', opt.which_epoch, pretrained_path)            
             if self.isTrain == 'train' :
                 self.load_network(self.netD, 'D', opt.which_epoch, pretrained_path)  
@@ -201,23 +204,11 @@ class Pix2PixHDModel(BaseModel):
         # Only return the fake_B image if necessary to save BW
         return [ self.loss_filter( loss_G_GAN,loss_G_l1, loss_G_GAN_Feat, loss_G_VGG, loss_D_real, loss_D_fake ), None if not infer else fake_image ]
 
-    def inference(self, label, inst, image=None):
+    def inference(self,in_label, in_img, gt_label, gt_img):
         # Encode Inputs        
-        image = Variable(image) if image is not None else None
-        input_label, inst_map, real_image, _ = self.encode_input(Variable(label), Variable(inst), image, infer=True)
-
-        # Fake Generation
-        if self.use_features:
-            if self.opt.use_encoded_image:
-                # encode the real image to get feature map
-                feat_map = self.netE.forward(real_image, inst_map)
-            else:
-                # sample clusters from precomputed features             
-                feat_map = self.sample_features(inst_map)
-            input_concat = torch.cat((input_label, feat_map), dim=1)                        
-        else:
-            input_concat = input_label        
-           
+        in_img = Variable(in_img) if in_img is not None else None
+        input_concat, input_parsing,  input_image, gt_parsing, real_image = self.encode_input(Variable(in_label), Variable(in_img), Variable(gt_label),Variable(gt_img), infer=True)
+                  
         if torch.__version__.startswith('0.4'):
             with torch.no_grad():
                 fake_image = self.netG.forward(input_concat)
@@ -307,7 +298,7 @@ class Pix2PixHDModel(BaseModel):
 
 class InferenceModel(Pix2PixHDModel):
     def forward(self, inp):
-        label, inst = inp
-        return self.inference(label, inst)
+        in_label, in_img, gt_label, gt_img= inp
+        return self.inference(in_label, in_img, gt_label, gt_img)
 
         

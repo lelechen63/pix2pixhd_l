@@ -41,11 +41,11 @@ for i, data in enumerate(dataset):
     if i >= opt.how_many:
         break
     if opt.data_type == 16:
-        data['label'] = data['label'].half()
-        data['inst']  = data['inst'].half()
+        data['input_parsing'] = data['input_parsing'].half()
+        data['gt_parsing']  = data['gt_parsing'].half()
     elif opt.data_type == 8:
-        data['label'] = data['label'].uint8()
-        data['inst']  = data['inst'].uint8()
+        data['input_parsing'] = data['input_parsing'].uint8()
+        data['gt_parsing']  = data['gt_parsing'].uint8()
     if opt.export_onnx:
         print ("Exporting to ONNX: ", opt.export_onnx)
         assert opt.export_onnx.endswith("onnx"), "Export model file should end with .onnx"
@@ -58,11 +58,17 @@ for i, data in enumerate(dataset):
     elif opt.onnx:
         generated = run_onnx(opt.onnx, opt.data_type, minibatch, [data['label'], data['inst']])
     else:        
-        generated = model.inference(data['label'], data['inst'], data['image'])
+        generated = model.inference(data['input_parsing'], data['input_image'], data['gt_parsing'],data['gt_image'])
         
-    visuals = OrderedDict([('input_label', util.tensor2label(data['label'][0], opt.label_nc)),
-                           ('synthesized_image', util.tensor2im(generated.data[0]))])
-    img_path = data['path']
+
+    # visuals = OrderedDict([('input_label', util.tensor2label(data['label'][0], opt.label_nc)),
+                           # ('synthesized_image', util.tensor2im(generated.data[0]))])
+    visuals = OrderedDict([('input_image', util.tensor2im(data['input_image'][0])),
+                                    ('input_parsing', util.tensor2label(data['input_parsing'][0],  opt.label_nc)),
+                                    ('gt_label', util.tensor2label(data['gt_parsing'][0], opt.label_nc)),
+                                    ('synthesized_image', util.tensor2im(generated.data[0])),
+                                    ('real_image', util.tensor2im(data['gt_image'][0]))])
+    img_path = data['gt_path']
     print('process image... %s' % img_path)
     visualizer.save_images(webpage, visuals, img_path)
 
