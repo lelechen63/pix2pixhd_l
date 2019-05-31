@@ -47,14 +47,12 @@ else:
 
 
 back_img = '/home/lchen63/data_test/lele_b.jpg'
-front_img = ['/home/lchen63/data_test/lele_f.jpg',
-'/home/lchen63/data_test/Zhong_wg.jpg',
-'/home/lchen63/data_test/Shuang1.jpg',
-'/home/lchen63/data_test/yuxin_wg.jpg'
+front_img = ['/home/lchen63/data_test/lele_f.jpg','/home/lchen63/data_test/Zhong_wg.jpg','/home/lchen63/data_test/Shuang1.jpg','/home/lchen63/data_test/yuxin_wg.jpg'
 ]
 for jj in front_img:
-    opt.front_img = jj
-    opt.back_img = back_img
+    opt.identity_image = jj
+    
+    opt.pose_image = back_img
 
 
     in_img_tensor = inst_tensor = feat_tensor = 0     
