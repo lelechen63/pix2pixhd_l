@@ -13,6 +13,13 @@ import torch
 import argparse
 from PIL import Image
 import cv2
+import os.path
+from data.base_dataset import BaseDataset, get_params, get_transform, normalize
+from PIL import Image
+import pickle
+import random
+import torchvision.transforms as transforms
+
 opt = TestOptions().parse(save=False)
 
 
