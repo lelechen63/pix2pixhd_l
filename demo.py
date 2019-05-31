@@ -59,18 +59,18 @@ params = get_params(opt, A.size)
 if opt.label_nc == 0:
     transform_A = get_transform(opt, params)
     A = A.convert('RGB')
-    A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
+    # A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
     in_tensor = transform_A(A)
     
 else:
     transform_A = get_transform(opt, params, method=Image.NEAREST, normalize=False)
-    A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
+    # A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
     in_tensor = transform_A(A) * 255.0
 
 B = Image.open(input_image).convert('RGB')
 # params = get_params(self.opt, B.size)
 transform_B = get_transform(opt, params)  
-B = transforms.functional.affine(B, params['angle'], params['translate'], params['scale'], params['shear'] )    
+# B = transforms.functional.affine(B, params['angle'], params['translate'], params['scale'], params['shear'] )    
 in_img_tensor = transform_B(B)
 
 # gt view can be back size view or side view
@@ -81,7 +81,7 @@ C = Image.open(gt_image).convert('RGB')
 # params = get_params(self.opt ,C.size)
 
 transform_C = get_transform(opt, params)
-C = transforms.functional.affine(C, params['angle'], params['translate'], params['scale'], params['shear'] )       
+# C = transforms.functional.affine(C, params['angle'], params['translate'], params['scale'], params['shear'] )       
 out_img_tensor = transform_C(C)
 
 # gt garment parsing
@@ -93,11 +93,11 @@ gt_garment = Image.open(gt_garment)
 if opt.label_nc == 0:
     transform_A = get_transform(opt, params)
     gt_garment =  gt_garment.convert('RGB')
-    gt_garment =  transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
+    # gt_garment =  transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
     A_tensor = transform_A(gt_garment)
 else:
     transform_D = get_transform(opt, params, method=Image.NEAREST, normalize=False)
-    gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
+    # gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
     gt_tensor = transform_D(gt_garment) * 255.0
 
 data = {'input_parsing': in_tensor.unsqueeze(0),  'input_image': in_img_tensor.unsqueeze(0),
