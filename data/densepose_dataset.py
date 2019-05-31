@@ -34,8 +34,10 @@ class DenseposeDataset(BaseDataset):
         # self.dataset_size = len(self.A_paths) 
         if self.train == 'train':
             self.dataset_size  = len(self.train_data)
-        else:
+        elif self.train =='test':
             self.dataset_size  = len(self.test_data)
+        elif self.train =='demo':
+            self.dataset_size  = len(self.demo_data)
     
     def __getitem__(self, index):                   
         in_img_tensor = inst_tensor = feat_tensor = 0
@@ -45,11 +47,10 @@ class DenseposeDataset(BaseDataset):
         # input 1 : front image
         if self.train == 'train':
             self.input_image = os.path.join(self.root, 'MEN','Tees_Tanks',  self.train_data[index][0].replace('.jpg','_512.jpg')) 
-        else:
+        elif self.train == 'test':
             self.input_image = os.path.join(self.root, 'MEN','Tees_Tanks',  self.test_data[index][0].replace('.jpg','_512.jpg')) 
-
-        
-
+        elif self.train == 'demo':
+            self.input_image = os.path.join(self.root, 'MEN','Tees_Tanks',  self.test_data[index][0].replace('.jpg','_512.jpg')) 
         # input 2 (garment parsing)
         self.garment =  self.input_image.replace('.jpg', '_parsing1.png')
         A = Image.open(self.garment)        

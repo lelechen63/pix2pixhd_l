@@ -73,7 +73,10 @@ class DenseposeDataset(BaseDataset):
         in_img_tensor = transform_B(B)
 
         # gt view can be back size view or side view
-        total_view = len(self.train_data[index])
+        if self.train == 'train':
+            total_view = len(self.train_data[index])
+        else:
+            total_view = len(self.test_data[index])
         if total_view == 2:
             gt_view = 1
         else:
