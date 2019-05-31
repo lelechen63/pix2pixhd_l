@@ -4,7 +4,7 @@ from data.base_data_loader import BaseDataLoader
 
 def CreateDataset(opt):
     dataset = None
-    from data.densepose_dataset import DenseposeDataset
+    from data.densepose_dataset_new import DenseposeDataset
     dataset = DenseposeDataset()
 
     print("dataset [%s] was created" % (dataset.name()))
