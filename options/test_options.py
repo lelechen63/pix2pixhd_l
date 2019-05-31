@@ -18,5 +18,6 @@ class TestOptions(BaseOptions):
         self.parser.add_argument("--onnx", type=str, help="run ONNX model via TRT")   
         self.parser.add_argument('--identity_image', type=str, default='/home/lchen63/data_test/lele_f.jpg')    
         self.parser.add_argument('--pose_image', type=str, default='/home/lchen63/data_test/lele_b.jpg')
+        self.parser.add_argument('--train', type=str, default='test', help='selects model to use for netG')
 
 
