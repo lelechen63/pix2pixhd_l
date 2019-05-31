@@ -80,9 +80,9 @@ class DenseposeDataset(BaseDataset):
             gt_view = random.choice([x for x in range(1,total_view)])
 
         if self.train =='train':
-            self.gt_image = os.path.join(self.root, 'MEN',,  self.train_data[index][gt_view].replace('.jpg','_512.jpg')) 
+            self.gt_image = os.path.join(self.root, 'MEN',  self.train_data[index][gt_view].replace('.jpg','_512.jpg')) 
         else:
-            self.gt_image = os.path.join(self.root, 'MEN',,  self.test_data[index][gt_view].replace('.jpg','_512.jpg')) 
+            self.gt_image = os.path.join(self.root, 'MEN',  self.test_data[index][gt_view].replace('.jpg','_512.jpg')) 
 
         C = Image.open(self.gt_image).convert('RGB')
         # params = get_params(self.opt ,C.size)
