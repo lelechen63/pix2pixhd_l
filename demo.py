@@ -126,6 +126,6 @@ visuals = OrderedDict([('input_image', util.tensor2im(data['input_image'][0])),
                                 ('real_image', util.tensor2im(data['gt_image'][0]))])
 img_path = data['gt_path']
 print('process image... %s' % img_path)
-visualizer.save_images(webpage, visuals, img_path)
+visualizer.save_images(webpage, visuals, [img_path])
 
 webpage.save()
