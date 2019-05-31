@@ -11,7 +11,8 @@ from util.visualizer import Visualizer
 from util import html
 import torch
 import argparse
-
+from PIL import Image
+import cv2
 opt = TestOptions().parse(save=False)
 
 
