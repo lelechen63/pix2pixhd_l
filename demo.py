@@ -12,15 +12,9 @@ from util import html
 import torch
 import argparse
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('-i','--identity_image', type=str, default='/home/lchen63/data_test/lele_f.jpg')    
-    parser.add_argument('-b','--pose_image', type=str, default='/home/lchen63/data_test/lele_b.jpg')
-    return parser.parse_args()
-config = parse_args()
-
 opt = TestOptions().parse(save=False)
+
+
 opt.nThreads = 1   # test code only supports nThreads = 1
 opt.batchSize = 1  # test code only supports batchSize = 1
 opt.serial_batches = True  # no shuffle
@@ -48,7 +42,7 @@ in_img_tensor = inst_tensor = feat_tensor = 0
 ### input A (label maps)
 
 # input 1 : front image
-input_image = config.identity_image.replace('.jpg','_512.jpg')
+input_image = opt.identity_image.replace('.jpg','_512.jpg')
 # input 2 (garment parsing)
 garment =  input_image.replace('.jpg', '_parsing1.png')
 A = Image.open(garment)        
@@ -73,7 +67,7 @@ in_img_tensor = transform_B(B)
 
 # gt view can be back size view or side view
 
-gt_image = config.pose_image.replace('.jpg','_512.jpg')
+gt_image = opt.pose_image.replace('.jpg','_512.jpg')
 
 C = Image.open(gt_image).convert('RGB')
 # params = get_params(self.opt ,C.size)
