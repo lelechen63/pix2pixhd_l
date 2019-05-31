@@ -55,7 +55,7 @@ front_img = ['/home/lchen63/data_test/lele_f.jpg',
 for jj in front_img:
     opt.front_img = jj
     opt.back_img = back_img
-    
+
 
     in_img_tensor = inst_tensor = feat_tensor = 0     
     ### input A (label maps)
@@ -134,7 +134,7 @@ for jj in front_img:
                                     ('gt_label', util.tensor2label(data['gt_parsing'][0], opt.label_nc)),
                                     ('synthesized_image', util.tensor2im(generated.data[0])),
                                     ('real_image', util.tensor2im(data['gt_image'][0]))])
-    img_path = data['gt_path']
+    img_path = data['input_path']
     print('process image... %s' % img_path)
     visualizer.save_images(webpage, visuals, [img_path])
 
