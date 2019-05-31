@@ -16,8 +16,8 @@ class TestOptions(BaseOptions):
         self.parser.add_argument("--export_onnx", type=str, help="export ONNX model to a given file")
         self.parser.add_argument("--engine", type=str, help="run serialized TRT engine")
         self.parser.add_argument("--onnx", type=str, help="run ONNX model via TRT")   
-        self.parser.add_argument('--identity_image', type=str, default='/home/lchen63/data_test/lele_f.jpg')    
-        self.parser.add_argument('--pose_image', type=str, default='/home/lchen63/data_test/lele_b.jpg')
+        self.parser.add_argument('--identity_image', type=str, default='/home/lchen63/data_test/lele2_f.jpg')    
+        self.parser.add_argument('--pose_image', type=str, default='/home/lchen63/data_test/lele2_b.jpg.jpg')
         self.parser.add_argument('--train', type=str, default='test', help='selects model to use for netG')
 
 
