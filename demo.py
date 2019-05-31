@@ -100,8 +100,8 @@ else:
     gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
     gt_tensor = transform_D(gt_garment) * 255.0
 
-data = {'input_parsing': in_tensor,  'input_image': in_img_tensor,
-    'gt_parsing': gt_tensor, 'gt_image': out_img_tensor, 'input_path': input_image, 'gt_path':gt_image}
+data = {'input_parsing': in_tensor.unsqueeze(0),  'input_image': in_img_tensor.unsqueeze(0),
+    'gt_parsing': gt_tensor.unsqueeze(0), 'gt_image': out_img_tensor.unsqueeze(0), 'input_path': input_image, 'gt_path':gt_image.unsqueeze(0)}
 
 if opt.data_type == 16:
     data['input_parsing'] = data['input_parsing'].half()
