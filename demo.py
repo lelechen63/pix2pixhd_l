@@ -62,7 +62,7 @@ for jj in front_img:
     in_img_tensor = inst_tensor = feat_tensor = 0     
     ### input A (label maps)
     # input 1 : front image
-    input_image = opt.identity_image.replace('.jpg','_512.jpg')
+    input_image = opt.identity_image[:-4] + '_512.jpg'
     # input 2 (garment parsing)
     garment =  input_image.replace('.jpg', '_parsing1.png')
     A = Image.open(garment)        
@@ -87,7 +87,7 @@ for jj in front_img:
 
     # gt view can be back size view or side view
 
-    gt_image = opt.pose_image.replace('.jpg','_512.jpg')
+    gt_image = opt.pose_image[:-4] + '_512.jpg'
 
     C = Image.open(gt_image).convert('RGB')
     # params = get_params(self.opt ,C.size)
