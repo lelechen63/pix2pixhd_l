@@ -25,7 +25,7 @@ def get_params(opt, size):
     elif opt.resize_or_crop == 'scale_width_and_crop':
         new_w = opt.loadSize
         new_h = opt.loadSize * h // w
-
+    
     x = random.randint(0, np.maximum(0, new_w - opt.fineSize))
     y = random.randint(0, np.maximum(0, new_h - opt.fineSize))
 

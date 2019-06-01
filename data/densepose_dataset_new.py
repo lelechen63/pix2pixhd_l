@@ -62,7 +62,7 @@ class DenseposeDataset(BaseDataset):
             in_tensor = transform_A(A)
             
         else:
-            transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
+            transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=True)
             A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
             in_tensor = transform_A(A) * 255.0
 
@@ -107,7 +107,7 @@ class DenseposeDataset(BaseDataset):
             gt_garment =  transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
             A_tensor = transform_A(gt_garment)
         else:
-            transform_D = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
+            transform_D = get_transform(self.opt, params, method=Image.NEAREST, normalize=True)
             gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
             gt_tensor = transform_D(gt_garment) * 255.0
         input_dict = {'input_parsing': in_tensor,  'input_image': in_img_tensor,
