@@ -47,11 +47,15 @@ else:
 
 
 back_img = '/home/lchen63/data_test/lele_b.jpg'
-front_img = ['/home/lchen63/data_test/lele_f.jpg','/home/lchen63/data_test/Zhong_wg.jpg','/home/lchen63/data_test/Shuang1.jpg','/home/lchen63/data_test/yuxin_wg.jpg'
-]
+front_img = ['/home/lchen63/data_test/lele_f.jpg',
+'/home/lchen63/data_test/Zhong_wg.jpg',
+'/home/lchen63/data_test/Shuang1.jpg',
+'/home/lchen63/data_test/yuxin_wg.jpg',
+'/home/lchen63/data_test/fashion2.png',
+'/home/lchen63/data_test/amazon_fashion1.jpg']
 for jj in front_img:
     opt.identity_image = jj
-    
+
     opt.pose_image = back_img
 
 
