@@ -118,7 +118,8 @@ class Visualizer():
     # save image to the disk
     def save_images(self, webpage, visuals, image_path):
         image_dir = webpage.get_image_dir()
-        short_path = ntpath.basename(image_path[0])
+        short_path = image_path.split('/')[-2] + '_' + image_path.split('/')[-1][:-4]
+        # short_path = ntpath.basename(image_path[0])
         name = os.path.splitext(short_path)[0]
 
         webpage.add_header(name)
