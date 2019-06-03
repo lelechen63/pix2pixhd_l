@@ -11,6 +11,19 @@ from tqdm import tqdm
 import re
 
 from PIL import Image
+import argparse
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--sample_dir",
+                        type=str,
+                        default="/home/lchen63/code/pix2pixhd_l/results/deepfashion_man/test_latest/images/")
+                        # default="/mnt/disk1/dat/lchen63/grid/sample/model_gan_r/")
+                        # default='/media/lele/DATA/lrw/data2/sample/lstm_gan')
+
+
+    return parser.parse_args()
+
+config = parse_args()
 
 def l1_score(generated_images, reference_images):
     score_list = []
@@ -71,6 +84,10 @@ def load_generated_images(images_folder):
     generated_images = []
 
     names = []
+
+    for gg in os.listdir(images_folder):
+        if '_synthesized_image.jpg' in gg:
+            print (gg)
     for img_name in os.listdir(images_folder):
         img = imread(os.path.join(images_folder, img_name))
         w = int(img.shape[1] / 5) #h, w ,c
@@ -92,7 +109,7 @@ def load_generated_images(images_folder):
     return input_images, target_images, generated_images, names
 
 
-def test(generated_images_dir, annotations_file_test):
+def test(generated_images_dir):
     # load images
     print ("Loading images...")
 
@@ -111,10 +128,9 @@ def test(generated_images_dir, annotations_file_test):
 
 if __name__ == "__main__":
     # fix these paths
-    generated_images_dir = 'results_v1.0/fashion_PATN_v1.0/test_latest/images'
-    annotations_file_test = 'fashion_data/fasion-resize-annotation-test.csv'
+    generated_images_dir = config.sample_dirm
 
-    test(generated_images_dir, annotations_file_test)
+    test(generated_images_dir)
 
 
 
