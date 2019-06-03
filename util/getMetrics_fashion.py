@@ -9,6 +9,7 @@ import pandas as pd
 
 from tqdm import tqdm
 import re
+import cv2
 
 from PIL import Image
 import argparse
@@ -94,10 +95,10 @@ def load_generated_images(images_folder):
 
                 names.append(gg[:-22])
     for img_name in names:
-        fake_img = imread(os.path.join(images_folder, img_name + "_synthesized_image.jpg" ))
+        fake_img = cv2.imread(os.path.join(images_folder, img_name + "_synthesized_image.jpg" ))
 
-        input_images.append(imread(os.path.join(images_folder, img_name + '_input_image.jpg' )))
-        target_images.append(imread(os.path.join(images_folder, img_name + '_real_image.jpg' )))
+        input_images.append(cv2.imread(os.path.join(images_folder, img_name + '_input_image.jpg' )))
+        target_images.append(cv2.imread(os.path.join(images_folder, img_name + '_real_image.jpg' )))
 
         generated_images.append(fake_img)
 
