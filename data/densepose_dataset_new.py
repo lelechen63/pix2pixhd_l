@@ -58,12 +58,14 @@ class DenseposeDataset(BaseDataset):
         if self.opt.label_nc == 0:
             transform_A = get_transform(self.opt, params)
             A = A.convert('RGB')
-            A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
+            if self.train == 'train':
+                A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
             in_tensor = transform_A(A)
             
         else:
             transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
-            A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
+            self.train == 'train':
+                A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
             in_tensor = transform_A(A) * 255.0
 
         B = Image.open(self.input_image).convert('RGB')
