@@ -88,6 +88,7 @@ def load_generated_images(images_folder):
 
     for gg in os.listdir(images_folder):
         if '_synthesized_image.jpg' in gg:
+            print (gg[:-22] + '_real_image.jpg')
             if os.path.exists(gg[:-22] + '_real_image.jpg'):
                 # generated_images.append(gg)
                 # target_images.append(gg[:-22] + '_real_image.jpg')
