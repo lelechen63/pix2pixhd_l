@@ -87,33 +87,28 @@ def load_generated_images(images_folder):
 
     for gg in os.listdir(images_folder):
         if '_synthesized_image.jpg' in gg:
-            print (gg)
-    for img_name in os.listdir(images_folder):
-        img = imread(os.path.join(images_folder, img_name))
-        w = int(img.shape[1] / 5) #h, w ,c
+            if os.path.exists(gg[:-22] + '_real_image.jpg'):
+                # generated_images.append(gg)
+                # target_images.append(gg[:-22] + '_real_image.jpg')
+                # input_images.append(gg[:-22] + '_input_image.jpg')
 
-        input_images.append(addBounding(img[:, :w]))
-        target_images.append(addBounding(img[:, 2*w:3*w]))
-        generated_images.append(addBounding(img[:, 4*w:5*w]))
+                names.append(gg[:-22])
+    for img_name in os.listdir(names):
+        fake_img = imread(os.path.join(images_folder, names + "_synthesized_image.jpg" ))
 
-        assert img_name.endswith('_vis.png') or img_name.endswith('_vis.jpg'), 'unexpected img name: should end with _vis.png'
-        img_name = img_name[:-8]
-        img_name = img_name.split('___')
-        assert len(img_name) == 2, 'unexpected img split: length 2 expect!'
-        fr = img_name[0]
-        to = img_name[1]
+        input_images.append(imread(os.path.join(images_folder, names + '_input_image.jpg' )))
+        target_images.append(imread(os.path.join(images_folder, names + '_real_image.jpg' )))
 
-        names.append([fr, to])
+        generated_images.append(fake_img)
 
-
-    return input_images, target_images, generated_images, names
+    return input_images, target_images, generated_images
 
 
 def test(generated_images_dir):
     # load images
     print ("Loading images...")
 
-    input_images, target_images, generated_images, names = load_generated_images(generated_images_dir)
+    input_images, target_images, generated_images = load_generated_images(generated_images_dir)
 
     print ("Compute inception score...")
     inception_score = get_inception_score(generated_images)
