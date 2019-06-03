@@ -101,6 +101,7 @@ def load_generated_images(images_folder):
         target_images.append(cv2.imread(os.path.join(images_folder, img_name + '_real_image.jpg' )))
 
         generated_images.append(fake_img)
+    print (type(generated_images[0]))
 
     return input_images, target_images, generated_images
 
