@@ -128,7 +128,7 @@ def test(generated_images_dir):
 
 if __name__ == "__main__":
     # fix these paths
-    generated_images_dir = config.sample_dirm
+    generated_images_dir = config.sample_dir
 
     test(generated_images_dir)
 
