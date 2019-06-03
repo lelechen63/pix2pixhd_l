@@ -64,7 +64,7 @@ class DenseposeDataset(BaseDataset):
             
         else:
             transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
-            self.train == 'train':
+            if self.train == 'train':
                 A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
             in_tensor = transform_A(A) * 255.0
 
