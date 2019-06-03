@@ -88,13 +88,13 @@ def load_generated_images(images_folder):
 
     for gg in os.listdir(images_folder):
         if '_synthesized_image.jpg' in gg:
-            print (gg[:-22] + '_real_image.jpg')
-            if os.path.exists(gg[:-22] + '_real_image.jpg'):
+            # print (gg[:-22] + '_real_image.jpg')
+            # if os.path.exists(gg[:-22] + '_real_image.jpg'):
                 # generated_images.append(gg)
                 # target_images.append(gg[:-22] + '_real_image.jpg')
                 # input_images.append(gg[:-22] + '_input_image.jpg')
 
-                names.append(gg[:-22])
+            names.append(gg[:-22])
     for img_name in names:
         fake_img = cv2.imread(os.path.join(images_folder, img_name + "_synthesized_image.jpg" ))
 
@@ -102,7 +102,7 @@ def load_generated_images(images_folder):
         target_images.append(cv2.imread(os.path.join(images_folder, img_name + '_real_image.jpg' )))
 
         generated_images.append(fake_img)
-    print (type(generated_images[0]))
+    # print (type(generated_images[0]))
 
     return input_images, target_images, generated_images
 
