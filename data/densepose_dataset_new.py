@@ -69,7 +69,8 @@ class DenseposeDataset(BaseDataset):
         B = Image.open(self.input_image).convert('RGB')
         # params = get_params(self.opt, B.size)
         transform_B = get_transform(self.opt, params)  
-        B = transforms.functional.affine(B, params['angle'], params['translate'], params['scale'], params['shear'] )    
+        if self.train == 'train':
+            B = transforms.functional.affine(B, params['angle'], params['translate'], params['scale'], params['shear'] )    
         in_img_tensor = transform_B(B)
 
         # gt view can be back size view or side view
@@ -91,7 +92,9 @@ class DenseposeDataset(BaseDataset):
         # params = get_params(self.opt ,C.size)
 
         transform_C = get_transform(self.opt, params)
-        C = transforms.functional.affine(C, params['angle'], params['translate'], params['scale'], params['shear'] )       
+
+        if self.train == 'train':
+            C = transforms.functional.affine(C, params['angle'], params['translate'], params['scale'], params['shear'] )       
         out_img_tensor = transform_C(C)
 
 
@@ -104,11 +107,13 @@ class DenseposeDataset(BaseDataset):
         if self.opt.label_nc == 0:
             transform_A = get_transform(self.opt, params)
             gt_garment =  gt_garment.convert('RGB')
-            gt_garment =  transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
+            if self.train == 'train':
+                gt_garment =  transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
             A_tensor = transform_A(gt_garment)
         else:
             transform_D = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
-            gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
+            if self.train =='train':
+                gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
             gt_tensor = transform_D(gt_garment) * 255.0
         input_dict = {'input_parsing': in_tensor,  'input_image': in_img_tensor,
             'gt_parsing': gt_tensor, 'gt_image': out_img_tensor, 'input_path': self.input_image, 'gt_path': self.gt_image}
