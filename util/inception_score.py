@@ -40,8 +40,8 @@ def get_inception_score(images, splits=1):
         sys.stdout.flush()
         inp = inps[(i * bs):min((i + 1) * bs, len(inps))]
         inp = np.concatenate(inp, 0)
-        print (inp.shape)
-        print ('=====')
+        # print (inp.shape)
+        # print ('=====')
 
         pred = sess.run(softmax, {'ExpandDims:0': inp})
         preds.append(pred)
