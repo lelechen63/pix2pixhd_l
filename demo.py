@@ -21,7 +21,6 @@ import random
 import torchvision.transforms as transforms
 
 opt = TestOptions().parse(save=False)
-from util.util import PIL2array
 
 
 opt.nThreads = 1   # test code only supports nThreads = 1
@@ -72,7 +71,7 @@ for jj in front_img:
     garment =  input_image.replace('.jpg', '_parsing1.png')
     A = Image.open(garment)        
     params = get_params(opt, A.size)
-    segment = PIL2array(A).copy()
+    segment = util.PIL2array(A).copy()
     segment[segment>0] = 1
     if opt.label_nc == 0:
         transform_A = get_transform(opt, params)
@@ -95,7 +94,7 @@ for jj in front_img:
 # gt garment parsing
     gt_garment = gt_image.replace('.jpg', '_parsing1.png')
     gt_garment = Image.open(gt_garment)
-    gt_segment = PIL2array(gt_garment).copy()
+    gt_segment = util.PIL2array(gt_garment).copy()
     gt_segment[gt_segment>0] = 1
     if opt.label_nc == 0:
         transform_A = get_transform(opt, params)

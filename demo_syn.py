@@ -19,7 +19,6 @@ from PIL import Image
 import pickle
 import random
 import torchvision.transforms as transforms
-from util.util import PIL2array
 
 opt = TestOptions().parse(save=False)
 
@@ -67,7 +66,7 @@ for jj in front_img:
     garment =  input_image.replace('.jpg', '_parsing1.png')
 #input garment    
     A = Image.open(garment)        
-    segment = PIL2array(A).copy()
+    segment = util.PIL2array(A).copy()
     segment[segment>0] = 1
     params = get_params(opt, A.size)
     transform_A = get_transform(opt, params, method=Image.NEAREST, normalize=False)
@@ -85,7 +84,7 @@ for jj in front_img:
 # gt garment parsing
     gt_garment = gt_image.replace('.jpg', '_parsing1.png')
     gt_garment = Image.open(gt_garment)
-    gt_segment = PIL2array(gt_garment).copy()
+    gt_segment = util.PIL2array(gt_garment).copy()
     gt_segment[gt_segment>0] = 1
 
     transform_D = get_transform(opt, params, method=Image.NEAREST, normalize=False)
