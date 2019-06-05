@@ -124,13 +124,7 @@ class Pix2PixHDModel(BaseModel):
         # real images for training
         if input_image is not None:
             input_image = Variable(input_image.data.cuda())
-        # # get edges from instance map
-        if not self.opt.no_instance:
-            # in_edge_map = self.get_edges(input_parsing.data.cuda())
-            # gt_edge_map = self.get_edges(gt_parsing.data.cuda())
-            input_labels = torch.cat(( input_image, input_label), dim=1)
-        else:
-            input_labels =  torch.cat(( input_image, input_label), dim=1)
+        input_labels =  torch.cat(( input_image, input_label), dim=1)
         input_label = Variable(input_label, volatile=infer)
 
         input_labels = Variable(input_labels, volatile=infer)

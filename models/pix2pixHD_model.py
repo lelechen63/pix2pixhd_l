@@ -113,20 +113,18 @@ class Pix2PixHDModel(BaseModel):
             self.optimizer_D = torch.optim.Adam(params, lr=opt.lr, betas=(opt.beta1, 0.999))
 
     def encode_input(self, input_parsing, input_image, gt_parsing, gt_image,infer=False):             
-        if self.opt.label_nc == 0:
-            input_label = input_parsing.data.cuda()
-            gt_label = gt_parsing.data.cuda()
-        else:
-            # create one-hot vector for label map 
-            size = input_parsing.size()
-            oneHot_size = (size[0], self.opt.label_nc, size[2], size[3])
-            gt_label = input_label = torch.cuda.FloatTensor(torch.Size(oneHot_size)).zero_()
-            input_label = input_label.scatter_(1, input_parsing.data.long().cuda(), 1.0)
-            if self.opt.data_type == 16:
-                input_label = input_label.half()
-            gt_label = gt_label.scatter_(1, gt_parsing.data.long().cuda(), 1.0)
-            if self.opt.data_type == 16:
-                gt_label = gt_label.half()
+       
+        # create one-hot vector for label map 
+        size = input_parsing.size()
+        oneHot_size = (size[0], self.opt.label_nc, size[2], size[3])
+        gt_label    = torch.cuda.FloatTensor(torch.Size(oneHot_size)).zero_()
+        input_label = torch.cuda.FloatTensor(torch.Size(oneHot_size)).zero_()
+        input_label = input_label.scatter_(1, input_parsing.data.long().cuda(), 1.0)
+        if self.opt.data_type == 16:
+            input_label = input_label.half()
+        gt_label = gt_label.scatter_(1, gt_parsing.data.long().cuda(), 1.0)
+        if self.opt.data_type == 16:
+            gt_label = gt_label.half()
 
         # real images for training
         if input_image is not None:
