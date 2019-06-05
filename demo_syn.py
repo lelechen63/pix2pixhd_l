@@ -66,7 +66,7 @@ for jj in front_img:
     garment =  input_image.replace('.jpg', '_parsing1.png')
 #input garment    
     A = Image.open(garment)        
-    segment = util.pIL2array(A).copy()
+    segment = util.PIL2array(A).copy()
     segment[segment>0] = 1
     params = get_params(opt, A.size)
     transform_A = get_transform(opt, params, method=Image.NEAREST, normalize=False)
