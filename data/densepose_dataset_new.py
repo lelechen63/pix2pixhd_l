@@ -16,21 +16,21 @@ class DenseposeDataset(BaseDataset):
         self.root = opt.dataroot    
         self.train = opt.train
         _file = open(os.path.join(self.root, "pickle/train_man.pkl"), "rb")
-        self.training = pickle.load(_file)
-        self.train_data = []
-        for key in self.training.keys():
-            self.train_data.append(self.training[key])
+        self.train_data = pickle.load(_file)
+        # self.train_data = []
+        # for key in self.training.keys():
+        #     self.train_data.append(self.training[key])
             # for img in self.train[key]:
             #     self.train_data.append(img.replace('.jpg','_512.jpg'))
         _file.close()
 
         random.shuffle(self.train_data)
         _file = open(os.path.join(self.root, "pickle/test_man.pkl"), "rb")
-        self.test = pickle.load(_file)
-        self.test_data = []
-        for key in self.test.keys():
-            self.test_data.append(self.test[key])
-            # for img in self.test[key]:
+        self.test_data = pickle.load(_file)
+        # self.test_data = []
+        # for key in self.test.keys():
+        #     self.test_data.append(self.test[key])
+        #     # for img in self.test[key]:
                 # self.test_data.append(img.replace('.jpg','_512.jpg'))
         _file.close()
         random.shuffle(self.test_data)
