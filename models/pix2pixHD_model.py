@@ -24,8 +24,6 @@ class Pix2PixHDModel(BaseModel):
         if opt.resize_or_crop != 'none' or not opt.train: # when training at full res this causes OOM
             torch.backends.cudnn.benchmark = True
         self.isTrain = opt.train
-        print (self.isTrain)
-        print ('yyyyy')
         self.use_features = opt.instance_feat or opt.label_feat
         self.gen_features = self.use_features and not self.opt.load_features
         input_nc = 2 * opt.label_nc + 3 

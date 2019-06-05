@@ -7,9 +7,7 @@ import pickle
 import random
 import numpy
 import torchvision.transforms as transforms
-def PIL2array(img):
-    return numpy.array(img.getdata(),
-                    numpy.uint8).reshape(img.size[1], img.size[0], 1)
+import util.util as util
 class DenseposeDataset(BaseDataset):
     def initialize(self, opt):
         self.opt = opt
@@ -63,14 +61,14 @@ class DenseposeDataset(BaseDataset):
             A = A.convert('RGB')
             if self.train == 'train':
                 A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
-            segment = PIL2array(A).copy()
+            segment = util.PIL2array(A).copy()
             segment[segment>0] = 1
             in_tensor = transform_A(A)    
         else:
             transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
             if self.train == 'train':
                 A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
-            segment = PIL2array(A).copy()
+            segment = util.PIL2array(A).copy()
             segment[segment>0] = 1
             in_tensor = transform_A(A) * 255.0
 
@@ -100,7 +98,7 @@ class DenseposeDataset(BaseDataset):
             gt_garment =  gt_garment.convert('RGB')
             if self.train == 'train':
                 gt_garment =  transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
-            gt_segment = PIL2array(gt_garment).copy()
+            gt_segment = util.PIL2array(gt_garment).copy()
             gt_segment[gt_segment>0] = 1
 
 
@@ -110,7 +108,7 @@ class DenseposeDataset(BaseDataset):
             if self.train =='train':
                 gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
 
-            gt_segment = PIL2array(gt_garment).copy()
+            gt_segment = util.PIL2array(gt_garment).copy()
             gt_segment[gt_segment>0] = 1
             gt_tensor = transform_A(gt_garment)
             gt_tensor = transform_D(gt_garment) * 255.0
