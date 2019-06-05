@@ -80,9 +80,7 @@ class DenseposeDataset(BaseDataset):
         transform_B = get_transform(self.opt, params) 
         if self.train == 'train':
             B = transforms.functional.affine(B, params['angle'], params['translate'], params['scale'], params['shear'] )    
-        print (type(B))
-        B = B * segment
-        print (type(B)) 
+        B = B * segment        
         B = Image.fromarray(B)
 
         in_img_tensor = transform_B(B)
