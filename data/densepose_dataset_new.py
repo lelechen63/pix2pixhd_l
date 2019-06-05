@@ -50,7 +50,7 @@ class DenseposeDataset(BaseDataset):
 
         
 
-        # input 2 (garment parsing)
+        # ( input garment parsing)
         self.garment =  self.input_image.replace('.jpg', '_parsing1.png')
         A = Image.open(self.garment)        
         # A =  A.transpose(Image.FLIP_LEFT_RIGHT)
@@ -60,19 +60,28 @@ class DenseposeDataset(BaseDataset):
             A = A.convert('RGB')
             if self.train == 'train':
                 A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
-            in_tensor = transform_A(A)
-            
+            segment = A.copy()
+            segment[segment>0] = 1
+            in_tensor = transform_A(A)    
         else:
             transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
             if self.train == 'train':
                 A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
+            segment = A.copy()
+            segment[segment>0] = 1
             in_tensor = transform_A(A) * 255.0
 
+
+        # (input image)
         B = Image.open(self.input_image).convert('RGB')
-        # params = get_params(self.opt, B.size)
-        transform_B = get_transform(self.opt, params)  
+        transform_B = get_transform(self.opt, params) 
         if self.train == 'train':
             B = transforms.functional.affine(B, params['angle'], params['translate'], params['scale'], params['shear'] )    
+        
+        B = B * segment 
+        print (B)
+
+
         in_img_tensor = transform_B(B)
 
         # gt view can be back size view or side view
@@ -90,33 +99,38 @@ class DenseposeDataset(BaseDataset):
         else:
             self.gt_image = os.path.join(self.root, 'MEN',  self.test_data[index][gt_view].replace('.jpg','_512.jpg')) 
 
-        C = Image.open(self.gt_image).convert('RGB')
-        # params = get_params(self.opt ,C.size)
-
-        transform_C = get_transform(self.opt, params)
-
-        if self.train == 'train':
-            C = transforms.functional.affine(C, params['angle'], params['translate'], params['scale'], params['shear'] )       
-        out_img_tensor = transform_C(C)
-
 
         # gt garment parsing
         self.gt_garment =  self.gt_image.replace('.jpg', '_parsing1.png')
         gt_garment = Image.open(self.gt_garment)
-
-        # gt_garment =  gt_garment.transpose(Image.FLIP_LEFT_RIGHT)        
-        # params = get_params(self.opt, gt_garment.size)
         if self.opt.label_nc == 0:
             transform_A = get_transform(self.opt, params)
             gt_garment =  gt_garment.convert('RGB')
             if self.train == 'train':
                 gt_garment =  transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
+            gt_segment = gt_garment.copy()
+            gt_segment[gt_segment>0] = 1
+
+
             A_tensor = transform_A(gt_garment)
         else:
             transform_D = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
             if self.train =='train':
                 gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
             gt_tensor = transform_D(gt_garment) * 255.0
+        
+         #gt image
+        C = Image.open(self.gt_image).convert('RGB')
+        transform_C = get_transform(self.opt, params)
+        if self.train == 'train':
+            C = transforms.functional.affine(C, params['angle'], params['translate'], params['scale'], params['shear'] )       
+        C = C * gt_segment
+        out_img_tensor = transform_C(C)
+
+
+
+        
+
         input_dict = {'input_parsing': in_tensor,  'input_image': in_img_tensor,
             'gt_parsing': gt_tensor, 'gt_image': out_img_tensor, 'input_path': self.input_image, 'gt_path': self.gt_image}
 
