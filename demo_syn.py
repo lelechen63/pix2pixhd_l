@@ -99,7 +99,7 @@ for jj in front_img:
     out_img_tensor = transform_C(C)
 
     data = {'input_parsing': in_tensor.unsqueeze(0),  'input_image': in_img_tensor.unsqueeze(0),
-        'gt_parsing': in_tensor.unsqueeze(0), 'gt_image': out_img_tensor.unsqueeze(0), 'input_path': input_image, 'gt_path':gt_image}
+        'gt_parsing': gt_tensor.unsqueeze(0), 'gt_image': out_img_tensor.unsqueeze(0), 'input_path': input_image, 'gt_path':gt_image}
 
     if opt.data_type == 16:
         data['input_parsing'] = data['input_parsing'].half()

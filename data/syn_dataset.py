@@ -44,22 +44,19 @@ class SynDataset(BaseDataset):
         # input 2 (garment parsing)
         self.garment =  self.input_image.replace('.png', '_parsing1.png')
         A = Image.open(self.garment)        
-        # A =  A.transpose(Image.FLIP_LEFT_RIGHT)
         params = get_params(self.opt, A.size)
-        
         transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
         if self.train == 'train':
             A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
         in_tensor = transform_A(A) * 255.0
 
+
         B = Image.open(self.input_image).convert('RGB')
-        # params = get_params(self.opt, B.size)
         transform_B = get_transform(self.opt, params)  
         if self.train == 'train':
             B = transforms.functional.affine(B, params['angle'], params['translate'], params['scale'], params['shear'] )    
         in_img_tensor = transform_B(B)
 
-        # gt view can be back size view or side view
         
         if self.train =='train':
             self.gt_image = os.path.join(self.root, 'data',  self.train_data[index], 'model_back.png') 
@@ -75,13 +72,10 @@ class SynDataset(BaseDataset):
             C = transforms.functional.affine(C, params['angle'], params['translate'], params['scale'], params['shear'] )       
         out_img_tensor = transform_C(C)
 
-
-        # gt garment parsing
+# gt garment parsing
         self.gt_garment =  self.gt_image.replace('.png', '_parsing1.png')
         gt_garment = Image.open(self.gt_garment)
 
-      
-       
         transform_D = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
         if self.train =='train':
             gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
