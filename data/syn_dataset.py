@@ -26,7 +26,7 @@ class SynDataset(BaseDataset):
         random.shuffle(self.test_data)
 
         self.train_data.sort()
-        
+
         if self.train == 'train':
             self.dataset_size  = len(self.train_data)
         else:
@@ -71,9 +71,9 @@ class SynDataset(BaseDataset):
         # gt view can be back size view or side view
         
         if self.train =='train':
-            self.gt_image = os.path.join(self.root, 'MEN',  self.train_data[index], 'model_back.png') 
+            self.gt_image = os.path.join(self.root, 'data',  self.train_data[index], 'model_back.png') 
         else:
-            self.gt_image = os.path.join(self.root, 'MEN',  self.test_data[index], 'model_back.png') 
+            self.gt_image = os.path.join(self.root, 'data',  self.test_data[index], 'model_back.png') 
 
         C = Image.open(self.gt_image).convert('RGB')
         # params = get_params(self.opt ,C.size)
