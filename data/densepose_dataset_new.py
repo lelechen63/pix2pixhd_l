@@ -15,7 +15,7 @@ class DenseposeDataset(BaseDataset):
         self.opt = opt
         self.root = opt.dataroot    
         self.train = opt.train
-        _file = open(os.path.join(self.root, "pickle/man_train.pkl"), "rb")
+        _file = open(os.path.join(self.root, "pickle/train_train.pkl"), "rb")
         self.training = pickle.load(_file)
         self.train_data = []
         for key in self.training.keys():
@@ -25,7 +25,7 @@ class DenseposeDataset(BaseDataset):
         _file.close()
 
         random.shuffle(self.train_data)
-        _file = open(os.path.join(self.root, "pickle/man_test.pkl"), "rb")
+        _file = open(os.path.join(self.root, "pickle/test_man.pkl"), "rb")
         self.test = pickle.load(_file)
         self.test_data = []
         for key in self.test.keys():
@@ -47,9 +47,9 @@ class DenseposeDataset(BaseDataset):
 
         # input 1 : front image
         if self.train == 'train':
-            self.input_image = os.path.join(self.root, 'MEN',  self.train_data[index][0].replace('.jpg','_512.jpg')) 
+            self.input_image = os.path.join(self.root, 'MEN',  self.train_data[index][0], self.train_data[index][1][:-4] + '_512.jpg') 
         else:
-            self.input_image = os.path.join(self.root, 'MEN',  self.test_data[index][0].replace('.jpg','_512.jpg')) 
+            self.input_image = os.path.join(self.root, 'MEN',  self.test_data[index][0], self.test_data[index][1][:-4] + '_512.jpg') 
 
         
 
@@ -85,20 +85,11 @@ class DenseposeDataset(BaseDataset):
 
         in_img_tensor = transform_B(B)
 
-        # gt view can be back size view or side view
-        if self.train == 'train':
-            total_view = len(self.train_data[index])
-        else:
-            total_view = len(self.test_data[index])
-        if total_view == 2:
-            gt_view = 1
-        else:
-            gt_view = random.choice([x for x in range(1,total_view)])
-
+     
         if self.train =='train':
-            self.gt_image = os.path.join(self.root, 'MEN',  self.train_data[index][gt_view].replace('.jpg','_512.jpg')) 
+            self.gt_image = os.path.join(self.root, 'MEN',  self.train_data[index][0], self.train_data[index][2][:-4] + '_512.jpg') 
         else:
-            self.gt_image = os.path.join(self.root, 'MEN',  self.test_data[index][gt_view].replace('.jpg','_512.jpg')) 
+            self.gt_image = os.path.join(self.root, 'MEN',  self.test_data[index][0], self.test_data[index][2][:-4] + '_512.jpg') 
 
 
         # gt garment parsing
