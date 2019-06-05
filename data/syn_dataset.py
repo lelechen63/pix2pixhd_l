@@ -17,14 +17,16 @@ class SynDataset(BaseDataset):
        
         _file.close()
 
-        # random.shuffle(self.train_data)
-        # _file = open(os.path.join(self.root, "pickle/test.pkl"), "rb")
-        # self.test_data = pickle.load(_file)
-        # self.test_data = []
+        random.shuffle(self.train_data)
+        _file = open(os.path.join(self.root, "pickle/train.pkl"), "rb")
+        self.test_data = pickle.load(_file)
+        self.test_data = []
        
-        # _file.close()
-        # random.shuffle(self.test_data)
-        # self.dataset_size = len(self.A_paths) 
+        _file.close()
+        random.shuffle(self.test_data)
+
+        self.train_data.sort()
+        
         if self.train == 'train':
             self.dataset_size  = len(self.train_data)
         else:
