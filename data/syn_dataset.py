@@ -31,7 +31,6 @@ class SynDataset(BaseDataset):
             self.dataset_size  = len(self.test_data)
     
     def __getitem__(self, index): 
-        print '++++++++++++++++'                  
         in_img_tensor = inst_tensor = feat_tensor = 0
      
         ### input A (label maps)
