@@ -15,7 +15,7 @@ class DenseposeDataset(BaseDataset):
         self.opt = opt
         self.root = opt.dataroot    
         self.train = opt.train
-        _file = open(os.path.join(self.root, "pickle/train_train.pkl"), "rb")
+        _file = open(os.path.join(self.root, "pickle/train_man.pkl"), "rb")
         self.training = pickle.load(_file)
         self.train_data = []
         for key in self.training.keys():
