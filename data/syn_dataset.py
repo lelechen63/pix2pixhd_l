@@ -12,13 +12,13 @@ class SynDataset(BaseDataset):
         self.opt = opt
         self.root = '/data/syn'    
         self.train = opt.train
-        _file = open(os.path.join(self.root, "pickle/train.pkl"), "rb")
+        _file = open(os.path.join(self.root, "pickle/train2.pkl"), "rb")
         self.train_data = pickle.load(_file)
        
         _file.close()
 
         random.shuffle(self.train_data)
-        _file = open(os.path.join(self.root, "pickle/train2.pkl"), "rb")
+        _file = open(os.path.join(self.root, "pickle/test12.pkl"), "rb")
         self.test_data = pickle.load(_file)
        
         _file.close()
