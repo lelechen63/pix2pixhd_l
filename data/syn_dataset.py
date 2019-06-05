@@ -13,7 +13,7 @@ class SynDataset(BaseDataset):
         self.root = '/data/syn'    
         self.train = opt.train
         _file = open(os.path.join(self.root, "pickle/train.pkl"), "rb")
-        self.train_data = pickle.load(_file)
+        self.train_data = pickle.load(_file)[:1500]
        
         _file.close()
 
@@ -25,7 +25,6 @@ class SynDataset(BaseDataset):
         _file.close()
         random.shuffle(self.test_data)
 
-        self.train_data.sort()
 
         if self.train == 'train':
             self.dataset_size  = len(self.train_data)
