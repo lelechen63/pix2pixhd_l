@@ -83,6 +83,8 @@ class DenseposeDataset(BaseDataset):
         print (type(B))
         B = B * segment
         print (type(B)) 
+        B = Image.fromarray(B)
+
         in_img_tensor = transform_B(B)
 
         # gt view can be back size view or side view
@@ -121,7 +123,7 @@ class DenseposeDataset(BaseDataset):
 
             gt_segment = PIL2array(gt_garment).copy()
             gt_segment[gt_segment>0] = 1
-
+            gt_tensor = transform_A(gt_garment)
             gt_tensor = transform_D(gt_garment) * 255.0
         
          #gt image
@@ -130,6 +132,7 @@ class DenseposeDataset(BaseDataset):
         if self.train == 'train':
             C = transforms.functional.affine(C, params['angle'], params['translate'], params['scale'], params['shear'] )       
         C = C * gt_segment
+        C = Image.fromarray(C)
         out_img_tensor = transform_C(C)
 
 
