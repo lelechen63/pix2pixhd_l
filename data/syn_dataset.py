@@ -20,7 +20,6 @@ class SynDataset(BaseDataset):
         random.shuffle(self.train_data)
         _file = open(os.path.join(self.root, "pickle/train2.pkl"), "rb")
         self.test_data = pickle.load(_file)
-        self.test_data = []
        
         _file.close()
         # random.shuffle(self.test_data)
