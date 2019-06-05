@@ -9,7 +9,7 @@ import numpy
 import torchvision.transforms as transforms
 def PIL2array(img):
     return numpy.array(img.getdata(),
-                    numpy.uint8).reshape(img.size[1], img.size[0], 3)
+                    numpy.uint8).reshape(img.size[1], img.size[0], 1)
 class DenseposeDataset(BaseDataset):
     def initialize(self, opt):
         self.opt = opt
