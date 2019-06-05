@@ -13,7 +13,7 @@ class SynDataset(BaseDataset):
         self.root = '/data/syn'    
         self.train = opt.train
         _file = open(os.path.join(self.root, "pickle/train.pkl"), "rb")
-        self.train_data = pickle.load(_file)[:1500]
+        self.train_data = pickle.load(_file)[:2000]
        
         _file.close()
 

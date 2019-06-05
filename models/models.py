@@ -9,11 +9,15 @@ def create_model(opt):
             model = Pix2PixHDModel()
         else:
             model = InferenceModel()
+    elif opt.model == 'noback':
+        from .pix2pixHD_nback import Pix2PixHDModel, InferenceModel
+        if opt.train == 'train': 
+            model = Pix2PixHDModel()
+        else:
+            model = InferenceModel()
     else:
     	from .ui_model import UIModel
     	model = UIModel()
-    print (opt.train)
-    print('==========')
     model.initialize(opt)
     if opt.verbose:
         print("model [%s] was created" % (model.name()))

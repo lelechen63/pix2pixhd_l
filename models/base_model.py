@@ -51,18 +51,10 @@ class BaseModel(torch.nn.Module):
     # helper loading function that can be used by subclasses
     def load_network(self, network, network_label, epoch_label, save_dir=''):        
         save_filename = '%s_net_%s.pth' % (epoch_label, network_label)
-        print  ('++')
-        print (save_dir)
         if not save_dir:
             save_dir = self.save_dir
-        print (save_dir)
-        print (type(save_dir))
-        print (save_filename)
-        print (type(save_filename))
-        # save_path  = save_dir + '/' + save_filename
+       
         save_path = os.path.join(save_dir, save_filename)   
-        print (save_path)
-        print ('=')
         if not os.path.isfile(save_path):
             print('%s not exists yet!' % save_path)
             if network_label == 'G':
