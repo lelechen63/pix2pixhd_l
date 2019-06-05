@@ -47,9 +47,9 @@ class DenseposeDataset(BaseDataset):
 
         # input 1 : front image
         if self.train == 'train':
-            self.input_image = os.path.join(self.root, 'MEN',  self.train_data[index][0], self.train_data[index][1][:-4] + '_512.jpg') 
+            self.input_image = os.path.join(self.root, ,  self.train_data[index][0], self.train_data[index][1][:-4] + '_512.jpg') 
         else:
-            self.input_image = os.path.join(self.root, 'MEN',  self.test_data[index][0], self.test_data[index][1][:-4] + '_512.jpg') 
+            self.input_image = os.path.join(self.root,  self.test_data[index][0], self.test_data[index][1][:-4] + '_512.jpg') 
 
         
 
@@ -87,9 +87,9 @@ class DenseposeDataset(BaseDataset):
 
      
         if self.train =='train':
-            self.gt_image = os.path.join(self.root, 'MEN',  self.train_data[index][0], self.train_data[index][2][:-4] + '_512.jpg') 
+            self.gt_image = os.path.join(self.root,  self.train_data[index][0], self.train_data[index][2][:-4] + '_512.jpg') 
         else:
-            self.gt_image = os.path.join(self.root, 'MEN',  self.test_data[index][0], self.test_data[index][2][:-4] + '_512.jpg') 
+            self.gt_image = os.path.join(self.root,  self.test_data[index][0], self.test_data[index][2][:-4] + '_512.jpg') 
 
 
         # gt garment parsing
