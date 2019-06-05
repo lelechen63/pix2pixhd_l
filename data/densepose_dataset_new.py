@@ -47,7 +47,7 @@ class DenseposeDataset(BaseDataset):
 
         # input 1 : front image
         if self.train == 'train':
-            self.input_image = os.path.join(self.root, ,  self.train_data[index][0], self.train_data[index][1][:-4] + '_512.jpg') 
+            self.input_image = os.path.join(self.root,  self.train_data[index][0], self.train_data[index][1][:-4] + '_512.jpg') 
         else:
             self.input_image = os.path.join(self.root,  self.test_data[index][0], self.test_data[index][1][:-4] + '_512.jpg') 
 
