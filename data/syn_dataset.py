@@ -46,18 +46,11 @@ class SynDataset(BaseDataset):
         A = Image.open(self.garment)        
         # A =  A.transpose(Image.FLIP_LEFT_RIGHT)
         params = get_params(self.opt, A.size)
-        if self.opt.label_nc == 0:
-            transform_A = get_transform(self.opt, params)
-            A = A.convert('RGB')
-            if self.train == 'train':
-                A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
-            in_tensor = transform_A(A)
-            
-        else:
-            transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
-            if self.train == 'train':
-                A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
-            in_tensor = transform_A(A) * 255.0
+        
+        transform_A = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
+        if self.train == 'train':
+            A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
+        in_tensor = transform_A(A) * 255.0
 
         B = Image.open(self.input_image).convert('RGB')
         # params = get_params(self.opt, B.size)
@@ -87,19 +80,12 @@ class SynDataset(BaseDataset):
         self.gt_garment =  self.gt_image.replace('.png', '_parsing1.png')
         gt_garment = Image.open(self.gt_garment)
 
-        # gt_garment =  gt_garment.transpose(Image.FLIP_LEFT_RIGHT)        
-        # params = get_params(self.opt, gt_garment.size)
-        if self.opt.label_nc == 0:
-            transform_A = get_transform(self.opt, params)
-            gt_garment =  gt_garment.convert('RGB')
-            if self.train == 'train':
-                gt_garment =  transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
-            A_tensor = transform_A(gt_garment)
-        else:
-            transform_D = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
-            if self.train =='train':
-                gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
-            gt_tensor = transform_D(gt_garment) * 255.0
+      
+       
+        transform_D = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
+        if self.train =='train':
+            gt_garment = transforms.functional.affine(gt_garment, params['angle'], params['translate'], params['scale'], params['shear'] ) 
+        gt_tensor = transform_D(gt_garment) * 255.0
         input_dict = {'input_parsing': in_tensor,  'input_image': in_img_tensor,
             'gt_parsing': gt_tensor, 'gt_image': out_img_tensor, 'input_path': self.input_image, 'gt_path': self.gt_image}
 
