@@ -19,9 +19,9 @@ from PIL import Image
 import pickle
 import random
 import torchvision.transforms as transforms
+from util.util import PIL2array
 
 opt = TestOptions().parse(save=False)
-from util.util import PIL2array
 
 
 opt.nThreads = 1   # test code only supports nThreads = 1
@@ -63,53 +63,39 @@ for jj in front_img:
 
 
     in_img_tensor = inst_tensor = feat_tensor = 0     
-    ### input A (label maps)
-    # input 1 : front image
     input_image = opt.identity_image[:-4] + '_512.jpg'
-
-
-    # input 2 (garment parsing)
     garment =  input_image.replace('.jpg', '_parsing1.png')
+#input garment    
     A = Image.open(garment)        
-    params = get_params(opt, A.size)
     segment = PIL2array(A).copy()
     segment[segment>0] = 1
-    if opt.label_nc == 0:
-        transform_A = get_transform(opt, params)
-        A = A.convert('RGB')
-        # A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
-        in_tensor = transform_A(A)
-        
-    else:
-        transform_A = get_transform(opt, params, method=Image.NEAREST, normalize=False)
-        # A = transforms.functional.affine(A, params['angle'], params['translate'], params['scale'], params['shear'] )
-        in_tensor = transform_A(A) * 255.0
-
-    B = Image.open(input_image).convert('RGB')
-    # params = get_params(self.opt, B.size)
-    transform_B = get_transform(opt, params)  
+    params = get_params(opt, A.size)
+    transform_A = get_transform(opt, params, method=Image.NEAREST, normalize=False)
+    in_tensor = transform_A(A) * 255.0
+#input image
+    B = Image.open(input_image)
     B = B * segment
-    B = Image.fromarray(B)    
+    B = Image.fromarray(B).convert('RGB')
+    transform_B = get_transform(opt, params)  
     in_img_tensor = transform_B(B)
+
+
+    gt_image = opt.pose_image[:-4] + '_512.jpg'
 
 # gt garment parsing
     gt_garment = gt_image.replace('.jpg', '_parsing1.png')
     gt_garment = Image.open(gt_garment)
     gt_segment = PIL2array(gt_garment).copy()
     gt_segment[gt_segment>0] = 1
-    if opt.label_nc == 0:
-        transform_A = get_transform(opt, params)
-        gt_garment =  gt_garment.convert('RGB')
-        A_tensor = transform_A(gt_garment)
-    else:
-        transform_D = get_transform(opt, params, method=Image.NEAREST, normalize=False)
-        gt_tensor = transform_D(gt_garment) * 255.0
 
-#gt image
-    gt_image = opt.pose_image[:-4] + '_512.jpg'
+    transform_D = get_transform(opt, params, method=Image.NEAREST, normalize=False)
+    gt_tensor = transform_D(gt_garment) * 255.0
+
+# gt image
     C = Image.open(gt_image)
     C = C * gt_segment
     C = Image.fromarray(C).convert('RGB')
+
     transform_C = get_transform(opt, params)
     out_img_tensor = transform_C(C)
 
