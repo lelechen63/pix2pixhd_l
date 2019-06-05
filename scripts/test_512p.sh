@@ -1,5 +1,5 @@
 ################################ Testing ################################
 # labels only
-#python demo.py  --name label2city_512p
+python demo.py  --name syn512p
 
-python test.py --name deepfashion_man
+#python test.py --name deepfashion_man
