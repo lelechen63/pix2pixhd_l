@@ -4,8 +4,12 @@ from data.base_data_loader import BaseDataLoader
 
 def CreateDataset(opt):
     dataset = None
-    from data.densepose_dataset_new import DenseposeDataset
-    dataset = DenseposeDataset()
+    if opt.dataset == 'densepose':
+        from data.densepose_dataset_new import DenseposeDataset
+        dataset = DenseposeDataset()
+    elif  opt.dataset == 'syn':
+        from data.syn_dataset import SynDataset
+        dataset = SynDataset()
 
     print("dataset [%s] was created" % (dataset.name()))
     dataset.initialize(opt)
