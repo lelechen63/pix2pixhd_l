@@ -10,7 +10,7 @@ def create_model(opt):
         else:
             model = InferenceModel()
     elif opt.model == 'noback':
-        from .pix2pixHD_nback import Pix2PixHDModel, InferenceModel
+        from .pix2pixHD_noback import Pix2PixHDModel, InferenceModel
         if opt.train == 'train': 
             model = Pix2PixHDModel()
         else:
