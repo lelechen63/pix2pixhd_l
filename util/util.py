@@ -23,6 +23,10 @@ def tensor2im(image_tensor, imtype=np.uint8, normalize=True):
         image_numpy = image_numpy[:,:,0]
     return image_numpy.astype(imtype)
 
+def PIL2array(img):
+    return numpy.array(img.getdata(),
+                    numpy.uint8).reshape(img.size[1], img.size[0], 1)
+
 # Converts a one-hot tensor into a colorful label map
 def tensor2label(label_tensor, n_label, imtype=np.uint8):
     if n_label == 0:
