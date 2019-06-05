@@ -91,6 +91,9 @@ for jj in front_img:
     B = Image.fromarray(B)    
     in_img_tensor = transform_B(B)
 
+#gt image
+    gt_image = opt.pose_image[:-4] + '_512.jpg'
+
 # gt garment parsing
     gt_garment = gt_image.replace('.jpg', '_parsing1.png')
     gt_garment = Image.open(gt_garment)
@@ -104,8 +107,6 @@ for jj in front_img:
         transform_D = get_transform(opt, params, method=Image.NEAREST, normalize=False)
         gt_tensor = transform_D(gt_garment) * 255.0
 
-#gt image
-    gt_image = opt.pose_image[:-4] + '_512.jpg'
     C = Image.open(gt_image)
     C = C * gt_segment
     C = Image.fromarray(C).convert('RGB')
