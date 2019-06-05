@@ -80,11 +80,9 @@ class DenseposeDataset(BaseDataset):
         transform_B = get_transform(self.opt, params) 
         if self.train == 'train':
             B = transforms.functional.affine(B, params['angle'], params['translate'], params['scale'], params['shear'] )    
-        
-        B = B * segment 
-        print (B)
-
-
+        print (type(B))
+        B = B * segment
+        print (type(B)) 
         in_img_tensor = transform_B(B)
 
         # gt view can be back size view or side view
