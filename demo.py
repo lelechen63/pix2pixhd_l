@@ -55,6 +55,67 @@ front_img = ['/home/lchen63/data_test/lele_f.jpg',
 '/home/lchen63/data_test/01_1_front.jpg',
 '/home/lchen63/data_test/04_1_front.jpg',
 '/home/lchen63/data_test/amazon_fashion1.jpg']
+
+def front2back_mapping(parsing_path):
+    img_parsing  = cv2.imread(parsing_path, 0)
+
+    new1 = img_parsing.copy()
+
+    new  = np.zeros(( 1, 512, 512), dtype=np.uint8)
+    new[0,:,:] = new1
+    high_neck = False
+    
+    for i in range(512):
+        high_cloth = False
+        hair = False
+        for j in range(512): 
+            if img_parsing[i,j] == 5:
+                high_cloth = True
+            elif  img_parsing[i,j] == 10:
+                high_neck = True
+            elif img_parsing[i,j] == 2:
+                hair = True
+            if img_parsing[i,j] == 15:
+                new[0,i,j] = 14
+            elif img_parsing[i,j] == 14:
+                new[0,i,j] = 15
+            elif img_parsing[i,j] == 18:
+                new[0,i,j] = 19
+            elif img_parsing[i,j] == 19:
+                new[0,i,j] = 18
+            elif  img_parsing[i,j] == 10:
+
+                if  high_cloth:
+                    new[0,i,j] = 5
+                else:
+                    new[0,i,j] = 10
+                if hair:
+                    new[0,i,j] = 2
+            elif img_parsing[i,j] == 13:
+                if high_neck:
+
+                    new[0,i,j] = 10
+                else:
+                    new[0,i,j] = 2
+                if hair:
+                    new[0,i,j] = 2
+            elif img_parsing[i,j] == 5:
+                new[0,i,j] = 5
+            elif img_parsing[i,j] == 9:
+                new[0,i,j] = 9
+            elif img_parsing[i,j] == 2:
+                new[0,i,j] = 2
+
+
+    return new[0]
+    # tmp  = np.zeros((1, h, w), dtype=np.uint8)
+    # tmp[0,:,: ] = rotated_img
+    # vis_res = decode_labels(new)
+    # parsing_im = Image.fromarray(vis_res[0])
+    # parsing_im.save(parsing_path.replace('1.png', '2.png'))
+
+front2back_mapping('/home/lchen63/data_test/Shuang1_512_parsing1.png')
+
 for jj in front_img:
     opt.identity_image = jj
 
@@ -69,6 +130,10 @@ for jj in front_img:
 
     # input 2 (garment parsing)
     garment =  input_image.replace('.jpg', '_parsing1.png')
+
+    gt_garment = front2back_mapping(input_image.replace('.jpg', '_parsing1.png'))
+
+
     A = Image.open(garment)        
     params = get_params(opt, A.size)
     segment = util.PIL2array(A).copy()
@@ -95,8 +160,6 @@ for jj in front_img:
     gt_image = opt.pose_image[:-4] + '_512.jpg'
 
 # gt garment parsing
-    gt_garment = gt_image.replace('.jpg', '_parsing1.png')
-    gt_garment = Image.open(gt_garment)
     gt_segment = util.PIL2array(gt_garment).copy()
     gt_segment[gt_segment>0] = 1
     if opt.label_nc == 0:
