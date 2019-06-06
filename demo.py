@@ -107,7 +107,7 @@ def front2back_mapping(parsing_path):
                 new[0,i,j] = 2
 
 
-    return new[0]
+    return Image.fromarray(new[0])
     # tmp  = np.zeros((1, h, w), dtype=np.uint8)
     # tmp[0,:,: ] = rotated_img
     # vis_res = decode_labels(new)
