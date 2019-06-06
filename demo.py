@@ -19,7 +19,7 @@ from PIL import Image
 import pickle
 import random
 import torchvision.transforms as transforms
-
+import numpy as np
 opt = TestOptions().parse(save=False)
 
 
